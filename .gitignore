@@ -1,0 +1,4 @@
+nginx-1.*
+nginx-dav-ext-module
+nginx-rtmp-module
+nginx-http-auth-digest
