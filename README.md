@@ -13,8 +13,8 @@ Clone the repo using git and then run the installation script:
 
     $ sudo -i
     # yum -y install git
-    # git clone https://bitbucket.dev.int.nokia.com/scm/toc/nginx-native.git
-    # cd nginx-native
+    # git clone https://github.com/mwatkins-nt/nginx-config.git
+    # cd nginx-config
     # ./nginx.sh
 
 ### Using the server
@@ -22,7 +22,7 @@ Clone the repo using git and then run the installation script:
 Once the install has completed, you should have a running NGINX server:
 
     [nokia@nuc-router ~]$ ps -ef | grep nginx
-    root      1320     1  0 15:19 ?        00:00:00 nginx: master process /usr/sbinnginx
+    root      1320     1  0 15:19 ?        00:00:00 nginx: master process /usr/sbin/nginx
     nginx     1321  1320  0 15:19 ?        00:00:00 nginx: worker process
     nginx     1322  1320  0 15:19 ?        00:00:00 nginx: cache manager process
     nginx     1323  1320  0 15:19 ?        00:00:00 nginx: cache loader process
