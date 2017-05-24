@@ -1,6 +1,6 @@
 #/bin/bash
 
-NGINX_VER=nginx-1.10.3
+NGINX_VER=nginx-1.12.0
 CONF_FILE=rtmp.nginx.conf
 ROOT_PWD=`pwd`
 BINARY=`which nginx > /dev/null 2>&1`
