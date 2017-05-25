@@ -12,7 +12,7 @@ The script:
 * Configures NGINX to serve web content from HTTP/80
 * Enables WebDAV write access to a folder under the web root, /dash and /dash-auth
 * Configures NGINX to listen on port tcp/3129 and acts as a transparent cache on that port
-* Configures NGINX to act as an RTMP server/endpoint and enables stream transcoding to MPEG-DASH
+* Configures NGINX to act as an RTMP server and enables stream transcoding from RTMP to MPEG-DASH
 
 ### Installing NGINX
 
@@ -125,8 +125,17 @@ If the command exits without error, then the file has been uploaded successfully
 The access logs will show something like:
 
     ::ffff:127.0.0.1 - dash [25/May/2017:12:17:47 +0100] "PUT /dash-auth/test.txt HTTP/1.1" 204 25 "-" "curl/7.29.0"
-/Ngin
 
-With the publishing process protected by a password, you will want to comment out the /dash section of the NGINX web configuration file in order to disable the unprotected folder which is writable by anybody.
+With the publishing process protected by a password, you will want to comment out the /dash section of the NGINX web configuration file in order to disable the unprotected folder (which is otherwise writable by anybody).
 
 ### Stream Trancoding
+
+You can test stream transcoding by using FFMPEG with a sample video file.
+
+    $ ffmpeg -re -i samsung_UHD_demo_3Iceland.mp4 -vcodec libx264 -acodec libfaac -f flv rtmp://10.49.206.54/dash/test_TB
+
+This will start delivering video to the RTMP server. If you stop the publishing process with ctrl-C, you should see a message similar to the one below in the /var/log/nginx/access.log file:
+
+    10.49.206.54 [25/May/2017:12:39:05 +0100] PUBLISH "dash" "test_TB" "" - 602675 409 "" "FMLE/3.0 (compatible; Lavf56.25" (7s)
+
+
