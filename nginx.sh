@@ -5,18 +5,14 @@ CONF_FILE=rtmp.nginx.conf
 ROOT_PWD=`pwd`
 BINARY=`which nginx > /dev/null 2>&1`
 
-if ($BINARY > /dev/null 2>&1)
+if [ ! -x $BINARY ]
 then
 	echo "NGINX not currently installed"
-
 elif [ -x $BINARY ]
 then
-	STRING=`$BINARY -v 2>&1`
-	INSTALL_VER=`echo $STRING | awk '{print $3}' | sed "s:\/:-:g"`
+	echo "NGINX is already installed"
+	INSTALL_VER=`nginx -v 2>&1 | awk '{print $3}'`
 	echo "Installed version: $INSTALL_VER"
-	if (nginx -V 2>&1 | grep nginx-rtmp-module > /dev/null) && [ $INSTALL_VER == $NGINX_VER ]
-	then
-		echo "NGINX already installed"
 	echo "Attempt to install again over existing version?"
 	read -n 1 -p "Enter [y/n]: " RESPONSE
 	case $RESPONSE in
@@ -24,15 +20,13 @@ then
 	n|N  ) echo ""; exit 1;;
 	* ) echo ""; echo "ERROR: Invalid selection, aborting operation!"; exit 1;;
 	esac
-	fi
+	echo "Stopping any running instances of NGINX"
+	sudo systemctl nginx stop > /dev/null 2>&1
+	sudo pkill nginx > /dev/null 2>&1; sleep 2
+	sudo pkill -9 nginx > /dev/null 2>&1
 fi
 
-echo "Stopping any running instances of NGINX"
-systemctl nginx stop > /dev/null 2>&1
-systemctl docker-nginx-rtmp stop > /dev/null 2>&1
-systemctl docker-nginx-rtmp disable > /dev/null 2>&1
-pkill nginx > /dev/null 2>&1; sleep 2
-pkill -9 nginx > /dev/null 2>&1
+echo "quitting early!"; exit 1
 
 echo "Installing native NGINX package"
 sudo yum install -y nginx gcc make libaio-devel pcre-devel openssl-devel expat-devel zlib-devel libxslt-devel libxslt-devel gd-devel GeoIP-devel gperftools-devel perl-ExtUtils-Embed
@@ -50,8 +44,8 @@ then
 	# Get NGINX stable source distribution
 	echo "Retrieving NGINX source code"
 	wget http://nginx.org/download/$NGINX_VER.tar.gz
-	sudo gzip -d -f $NGINX_VER.tar.gz
-	sudo tar -xf $NGINX_VER.tar
+	gzip -d -f $NGINX_VER.tar.gz
+	tar -xf $NGINX_VER.tar
 
 elif [ -d $NGINX_VER ]
 then
@@ -59,26 +53,21 @@ then
 
 elif [ -f $NGINX_VER.tar ]
 then
-        sudo tar -xf $NGINX_VER.tar
+        tar -xf $NGINX_VER.tar
 
 elif [ -f $NGINX_VER.tar.gz ]
 then
-	sudo gzip -d -f $NGINX_VER.tar.gz
-	sudo tar -xf $NGINX_VER.tar
-fi
-
-if [ -f $NGINX_VER.tar ]
-then
-	gzip $NGINX_VER.tar
+	gzip -d -f $NGINX_VER.tar.gz
+	tar -xf $NGINX_VER.tar
 fi
 
 # Get NGINX Auth Digest module source code
 # Note: There are several different implementations!
-sudo git clone https://github.com/atomx/nginx-http-auth-digest.git
+git clone https://github.com/atomx/nginx-http-auth-digest.git
 # Get NGINX Additional WebDav Support
-sudo git clone https://github.com/arut/nginx-dav-ext-module.git
+git clone https://github.com/arut/nginx-dav-ext-module.git
 # Get NGINX RTMP module source code
-sudo git clone https://github.com/arut/nginx-rtmp-module.git
+git clone https://github.com/arut/nginx-rtmp-module.git
 
 # Compile NGINX agaist external modules
 #
@@ -98,8 +87,10 @@ fi
 echo "Copying configuration files, setting up web root folder"
 sudo cp -r /usr/share/nginx/html/* /var/www/html
 sudo cp nginx-rtmp-module/stat.xsl /var/www/html/stat.xsl
-sudo mkdir -p /var/cache/nginx/client_temp
-sudo chown -R nginx:nginx /var/cache/nginx/
+
+sudo mkdir -p /var/cache/nginx/client_temp /var/www/html/dash
+sudo chown -R nginx:nginx /var/cache/nginx/ /var/www/html/dash
+
 sudo cp -R nginx/* /etc/nginx
 
 echo "Installing FFMPEG through dextop REPO"
