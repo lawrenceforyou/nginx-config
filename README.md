@@ -140,7 +140,13 @@ This will deliver video to the NGINX RTMP module. If you stop the publishing pro
 
     10.49.206.54 [25/May/2017:12:39:05 +0100] PUBLISH "dash" "test_TB" "" - 602675 409 "" "FMLE/3.0 (compatible; Lavf56.25" (7s)
 
-After a few moments, you should see file content being generated in the transcoding target folder. This is located under /tmp, but can sometimes be hard to find due to the directory structure involved. The commands shown below should show you the generated MPEG-DASH content.
+After a few moments, you should also be able to see transcoded content being exposed through the NGINX web server at the URL:
+
+http://[server-ip]/transcoding/
+
+(substitute the actual IP address of your server in the string above)
+
+The local directory where this content appears is under /tmp, but it can sometimes be hard to find due to the directory structure involved. The commands shown below should show you the generated MPEG-DASH content.
 
     $ sudo -i
     # ls -l /tmp/*nginx*/tmp/dash/
@@ -153,8 +159,6 @@ After a few moments, you should see file content being generated in the transcod
     -rw-r--r--. 1 nginx nginx    9978 May 25 14:31 test_TB-raw.m4a
     -rw-r--r--. 1 nginx nginx  984737 May 25 14:31 test_TB-raw.m4v
 
-You should also be able to see this content being exposed through the NGINX web server at the URL:
+On my system, the transcoded content could be found at:
 
-http://[server-ip]/transcoding/
-
-(substitute the actual IP address of your server in the string above)
+/tmp/systemd-private-e25d82fccf2948f4ac7d18717e876ad8-nginx.service-qkAQ0R/tmp/dash
