@@ -130,17 +130,13 @@ With the publishing process protected by a password, you will want to comment ou
 
 ### Stream Trancoding
 
-You can test stream transcoding by starting FFMPEG and providing it with a video file to simulate the publishing of live content:
+You can test stream transcoding by invoking FFMPEG and providing it with a local video file to simulate the publishing of live content:
 
     $ ffmpeg -re -i samsung_UHD_demo_3Iceland.mp4 -vcodec libx264 -acodec libfaac -f flv rtmp://[server-ip]/dash/test_TB
 
 (substitute the actual IP address of your server in the string above)
 
-This will deliver video to the NGINX RTMP module. If you stop the publishing process with ctrl-C, you should see a message similar to the one below in the /var/log/nginx/access.log file:
-
-    10.49.206.54 [25/May/2017:12:39:05 +0100] PUBLISH "dash" "test_TB" "" - 602675 409 "" "FMLE/3.0 (compatible; Lavf56.25" (7s)
-
-After a few moments, you should also be able to see transcoded content being exposed through the NGINX web server at the URL:
+This will deliver your video file to the NGINX RTMP module. After a few moments, you should also be able to see transcoded content being exposed through the NGINX web server at the URL:
 
 http://[server-ip]/transcoding/
 
@@ -162,3 +158,13 @@ The local directory where this content appears is under /tmp, but it can sometim
 On my system, the transcoded content could be found at:
 
 /tmp/systemd-private-e25d82fccf2948f4ac7d18717e876ad8-nginx.service-qkAQ0R/tmp/dash
+
+If/when you stop the publishing process with ctrl-C, you should see a message similar to the one below in the /var/log/nginx/access.log file:
+
+    10.49.206.54 [25/May/2017:12:39:05 +0100] PUBLISH "dash" "test_TB" "" - 602675 409 "" "FMLE/3.0 (compatible; Lavf56.25" (7s)
+
+That log message shows that seven seconds of content publishing took place. At this point you should be able to take a live video source outputting RTMP and point it to your server using a URL of the form:
+
+rtmp://[server-ip]/dash/[stream-file-name]
+
+Do NOT add the .mpd suffix to the above, that will be added automatically by the transcoding process.
