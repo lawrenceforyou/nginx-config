@@ -35,7 +35,9 @@ echo "Setting up directory/folder structure"
 sudo mkdir -p /home/nginx
 sudo chown nginx:nginx /home/nginx
 sudo mkdir -p /var/www/html/
+sudo mkdir -p /var/www/DASH/
 sudo chown -R nginx:nginx /var/www/html/
+sudo chown -R nginx:nginx /var/www/DASH/
 
 if [ ! -d $NGINX_VER ] && [ ! -f $NGINX_VER.tar ] && [ ! -f $NGINX_VER.tar.gz ]
 then
@@ -85,8 +87,10 @@ fi
 echo "Copying configuration files, setting up web root folder"
 sudo cp -r /usr/share/nginx/html/* /var/www/html
 sudo cp nginx-rtmp-module/stat.xsl /var/www/html/stat.xsl
+
 sudo mkdir -p /var/cache/nginx/client_temp /var/www/html/dash
 sudo chown -R nginx:nginx /var/cache/nginx/ /var/www/html/dash
+
 sudo cp -R nginx/* /etc/nginx
 
 echo "Installing FFMPEG through dextop REPO"
