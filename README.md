@@ -132,7 +132,9 @@ With the publishing process protected by a password, you will want to comment ou
 
 You can test stream transcoding by starting FFMPEG and providing it with a video file to simulate the publishing of live content:
 
-    $ ffmpeg -re -i samsung_UHD_demo_3Iceland.mp4 -vcodec libx264 -acodec libfaac -f flv rtmp://10.49.206.54/dash/test_TB
+    $ ffmpeg -re -i samsung_UHD_demo_3Iceland.mp4 -vcodec libx264 -acodec libfaac -f flv rtmp://[server-ip]/dash/test_TB
+
+(substitute the actual IP address of your server in the string above)
 
 This will deliver video to the NGINX RTMP module. If you stop the publishing process with ctrl-C, you should see a message similar to the one below in the /var/log/nginx/access.log file:
 
@@ -155,4 +157,4 @@ You should also be able to see this content being exposed through the NGINX web 
 
 http://[server-ip]/transcoding/
 
-(replace the IP address shown above with the actual IP address of your server)
+(substitute the actual IP address of your server in the string above)
