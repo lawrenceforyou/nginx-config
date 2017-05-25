@@ -2,7 +2,9 @@
 
 ## MPEG-DASH hosting, stream caching, transcoding
 
-This source code repository contains the shell scripts necessary to build a server running NGINX. The software will be configured for WebDAV write access, to allow for the hosting and distribution of MPEG-DASH video streams. In conjunction with some complementary scripts, it can also be used to cache video streams hosted at external sites/locations, such as MPEG-DASH streams distributed by Akamai and their CDN network. NGINX can also accept an RTMP stream and convert/transcode it to an MPEG-DASH stream. Most of the functionality described here is still under heavy testing and development.
+This source code repository contains the shell scripts necessary to build a server running NGINX. The software will be configured for WebDAV write access, to allow for the hosting and distribution of MPEG-DASH video streams. In conjunction with some complementary scripts, it can also be used to cache video streams hosted at external sites/locations, such as MPEG-DASH streams distributed by Akamai and their CDN network. NGINX can also accept an RTMP stream and convert/transcode it to an MPEG-DASH stream.
+
+*Most of the functionality described here is still under heavy testing and development.*
 
 * Installs the NGINX web server with a number of external modules compiled in
 * Configures NGINX to serve web content from HTTP/80
