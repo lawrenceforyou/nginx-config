@@ -1,4 +1,6 @@
-# NGINX server for MPEG-DASH hosting, content caching, transcoding
+# NGINX Server Configuration Script
+
+# For MPEG-DASH hosting, stream caching, transcoding
 
 This source code repository contains the shell scripts necessary to build a server running NGINX. The software will be configured for WebDAV write access, to allow for the hosting and distribution of MPEG-DASH video streams. In conjunction with some complementary scripts, it can also be used to cache video streams hosted at external sites/locations, such as MPEG-DASH streams distributed by Akamai and their CDN network. NGINX can also accept an RTMP stream and convert/transcode it to an MPEG-DASH stream. Most of the functionality described here is still under heavy testing and development.
 
@@ -103,8 +105,17 @@ Now we try supplying the wrong password:
     </body>
     </html>
 
+You will see the following int he NGINX error log:
+
+    2017/05/25 12:17:38 [error] 10711#0: *211 user "dash": password mismatch, client: ::ffff:127.0.0.1, server: nuc-router, request: "PUT /dash-auth/test.txt HTTP/1.1", host: "127.0.0.1"
+
 Then use the new password:
 
     $ curl -u dash:testing -T test.txt http://127.0.0.1/dash-auth/test.txt
 
 If the command exits without error, then the file has been uploaded successfully.
+
+The access logs will show something like:
+
+    ::ffff:127.0.0.1 - dash [25/May/2017:12:17:47 +0100] "PUT /dash-auth/test.txt HTTP/1.1" 204 25 "-" "curl/7.29.0"
+
