@@ -4,7 +4,9 @@
 
 This source code repository contains the shell scripts necessary to build a server running NGINX. The software will be configured for WebDAV write access, to allow for the hosting and distribution of MPEG-DASH video streams. In conjunction with some complementary scripts, it can also be used to cache video streams hosted at external sites/locations, such as MPEG-DASH streams distributed by Akamai and their CDN network. NGINX can also accept an RTMP stream and convert/transcode it to an MPEG-DASH stream.
 
-*Most of the functionality described here is still under heavy testing and development.*
+*Note: most of the functionality described here is still under heavy testing and development*
+
+The script:
 
 * Installs the NGINX web server with a number of external modules compiled in
 * Configures NGINX to serve web content from HTTP/80
@@ -12,15 +14,16 @@ This source code repository contains the shell scripts necessary to build a serv
 * Configures NGINX to listen on port tcp/3129 and acts as a transparent cache on that port
 * Configures NGINX to act as an RTMP server/endpoint and enables stream transcoding to MPEG-DASH
 
-Clone the repo using git and then run the installation script:
+### Installing NGINX
 
-    $ sudo -i
-    # yum -y install git
-    # git clone https://github.com/mwatkins-nt/nginx-config.git
-    # cd nginx-config
-    # ./nginx.sh
+Clone the repo (using git) and then run the installation script:
 
-### Using the server
+    $ sudo yum -y install git
+    $ git clone https://github.com/mwatkins-nt/nginx-config.git
+    $ cd nginx-config
+    $ sudo ./nginx.sh
+
+### Examining the server
 
 Once the install has completed, you should have a running NGINX server:
 
@@ -46,6 +49,8 @@ tcp/80	 | Web server with WebDAV enabled for /dash location
 tcp/3129 | Web server for transparent stream caching
 tcp/1935 | RTMP server/endpoint for stream transcoding
 
+### WebDAV Testing
+
 With the server running, you can test the publishing of files through WebDAV by using the following command:
 
     $ echo "Testing" > test.txt
@@ -63,7 +68,7 @@ This will upload a file called test.txt to the server and deposit it in the /das
     $ cat test.txt 
     Testing
 
-You can also use a password protected publishing process by sending files to /dash-auth instead of /dash. Due to limitations in NGINX, only basic authentication (not Digest) is permitted at this time. Publishing to this location without sending credentials should fail, e.g.
+You can also use a password to protect the publishing process by sending files to /dash-auth instead of /dash. Due to limitations in NGINX, only basic authentication (not Digest) is permitted at this time. Publishing to this location without sending credentials should fail, e.g.
 
     $ curl -T test.txt http://127.0.0.1/dash-auth/test.txt
     <html>
@@ -107,7 +112,7 @@ Now we try supplying the wrong password:
     </body>
     </html>
 
-You will see the following int he NGINX error log:
+You will see the following in the NGINX error log:
 
     2017/05/25 12:17:38 [error] 10711#0: *211 user "dash": password mismatch, client: ::ffff:127.0.0.1, server: nuc-router, request: "PUT /dash-auth/test.txt HTTP/1.1", host: "127.0.0.1"
 
@@ -120,4 +125,8 @@ If the command exits without error, then the file has been uploaded successfully
 The access logs will show something like:
 
     ::ffff:127.0.0.1 - dash [25/May/2017:12:17:47 +0100] "PUT /dash-auth/test.txt HTTP/1.1" 204 25 "-" "curl/7.29.0"
+/Ngin
 
+With the publishing process protected by a password, you will want to comment out the /dash section of the NGINX web configuration file in order to disable the unprotected folder which is writable by anybody.
+
+### Stream Trancoding
