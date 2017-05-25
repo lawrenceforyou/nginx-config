@@ -130,18 +130,17 @@ With the publishing process protected by a password, you will want to comment ou
 
 ### Stream Trancoding
 
-You can test stream transcoding by using FFMPEG with a sample video file.
+You can test stream transcoding by starting FFMPEG and providing it with a video file to simulate the publishing of live content:
 
     $ ffmpeg -re -i samsung_UHD_demo_3Iceland.mp4 -vcodec libx264 -acodec libfaac -f flv rtmp://10.49.206.54/dash/test_TB
 
-This will start delivering video to the RTMP server. If you stop the publishing process with ctrl-C, you should see a message similar to the one below in the /var/log/nginx/access.log file:
+This will deliver video to the NGINX RTMP module. If you stop the publishing process with ctrl-C, you should see a message similar to the one below in the /var/log/nginx/access.log file:
 
     10.49.206.54 [25/May/2017:12:39:05 +0100] PUBLISH "dash" "test_TB" "" - 602675 409 "" "FMLE/3.0 (compatible; Lavf56.25" (7s)
 
 After a few moments, you should see file content being generated in the transcoding target folder. This is located under /tmp, but can sometimes be hard to find due to the directory structure involved. The commands shown below should show you the generated MPEG-DASH content.
 
     $ sudo -i
-    # ls -l /tmp/*nginx*/tmp/dash/
     # ls -l /tmp/*nginx*/tmp/dash/
     total 11068
     -rw-r--r--. 1 nginx nginx   75117 May 25 14:31 test_TB-0.m4a
@@ -154,6 +153,6 @@ After a few moments, you should see file content being generated in the transcod
 
 You should also be able to see this content being exposed through the NGINX web server at the URL:
 
-http://10.49.206.54/transcoding/
+http://[server-ip]/transcoding/
 
 (replace the IP address shown above with the actual IP address of your server)
