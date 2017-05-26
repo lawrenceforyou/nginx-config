@@ -19,7 +19,7 @@ The script:
 Clone the repo (using git) and then run the installation script:
 
     $ sudo yum -y install git
-    $ git clone https://github.com/mwatkins-nt/nginx-config.git
+    $ git clone https://github.com/nokia/nginx-config.git
     $ cd nginx-config
     $ sudo ./nginx.sh
 
