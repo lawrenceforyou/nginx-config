@@ -26,8 +26,8 @@ then
 	sudo pkill -9 nginx > /dev/null 2>&1
 fi
 
-echo "Installing native NGINX package"
-sudo yum install -y nginx gcc make libaio-devel pcre-devel openssl-devel expat-devel zlib-devel libxslt-devel libxslt-devel gd-devel GeoIP-devel gperftools-devel perl-ExtUtils-Embed
+echo "Installing native NGINX package and dependencies"
+sudo yum install -y nginx wget gcc make libaio-devel pcre-devel openssl-devel expat-devel zlib-devel libxslt-devel libxslt-devel gd-devel GeoIP-devel gperftools-devel perl-ExtUtils-Embed
 
 echo "Setting up directory/folder structure"
 sudo mkdir -p /home/nginx
